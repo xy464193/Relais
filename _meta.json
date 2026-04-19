@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-04-19",
+  "skills": [
+    {
+      "id": "skill-creator",
+      "name": "Skill Creator",
+      "description": "Guide for creating Relais skills. Triggered when the user needs to empower the model with specialized capabilities, particularly those involving local sandbox operations, automation scripts, or specific professional workflows.",
+      "version": "1.0.0",
+      "url": "https://github.com/xy464193/Relais/blob/main/skills/skill-creator/SKILL.md",
+      "category": "system",
+      "author": "Relais"
+    }
+  ]
+}
