@@ -1,9 +1,8 @@
-```
 ---
 name: relais-skill-blueprint
-version: 1.0.0
+version: 2.0.0
 description: Official guide for creating Relais skills. Triggered when the user needs to empower the model with specialized capabilities, particularly those involving local sandbox operations, automation scripts, or specific professional workflows.
-execution_env: hybrid # Options: cloud-only, local-ish, hybrid
+execution_env: hybrid
 ---
 
 # Relais Skill Blueprint
@@ -12,54 +11,99 @@ This guide defines the standards for building efficient, secure, and modular Ski
 
 ## What is a Relais Skill?
 
-In the Relais architecture, a Skill acts as the bridge between the "Cloud Brain (AI Provider)" and the "Local Hands (iSH Sandbox)". Skills transform a general LLM into a specialized Agent capable of utilizing local tools and maintaining state within a secure environment.
+A Skill bridges the "Cloud Brain (AI Provider)" and the "Local Hands (iSH Sandbox)". It transforms a general LLM into a specialized Agent capable of utilizing local tools and maintaining state within a secure environment.
 
-### Core Values of a Skill
-1. **Sandbox Empowerment**: Instructs the model on how to safely execute Linux commands within `/var/relais`.
+### Core Values
+1. **Sandbox Empowerment**: Instructs the model how to safely execute Linux commands within the session workspace.
 2. **Workflow Formalization**: Converts complex prompt intentions into structured, repeatable execution flows.
 3. **Private Knowledge Injection**: Provides domain-specific API documentation, data schemas, or internal business logic.
 
+## Environment & Paths
+
+All local execution happens inside an Alpine Linux (x86 via iSH) chroot on the user's iOS device.
+
+| Variable | Value |
+|---|---|
+| Session workspace | `/mnt/relais/{sessHash}/workspace` |
+| User uploads | `/mnt/relais/{sessHash}/attachments/uploads/` |
+| Shared across sessions | `/mnt/relais/global/` |
+
+- `{sessHash}` is the short hash of the current session ID, injected automatically by Relais.
+- **Never hardcode** physical iOS paths (e.g. `/var/...` or `/mnt/...` raw paths). Always use the `$RELAIS_SESS_PATH` environment variable or relative paths from workspace.
+- The correct tool for running shell commands is `execute_ish_command`, not `execute_local_shell`.
+
 ## Core Design Principles
 
-### 1. Extreme Token Efficiency (Concise is Key)
-The context window is a shared and finite resource. Skill definitions must assume the model is already highly capable.
+### 1. Extreme Token Efficiency
+The context window is a shared, finite resource. Assume the model is already highly capable.
 - **Eliminate Redundancy**: Do not explain common knowledge or basic LLM concepts.
-- **Examples Over Prose**: Use short Bash snippets or JSON structures instead of long paragraphs of explanation.
+- **Examples Over Prose**: Use short Bash snippets or JSON structures instead of paragraphs.
 
 ### 2. Explicit Execution Boundaries
-When defining a skill, clearly specify where the work happens:
-- **Cloud-only**: Tasks involving text processing or external API calls with no local resource requirements.
-- **Local-iSH**: Tasks requiring the `execute_local_shell` tool. Always specify the working directory (e.g., `cd /var/relais/workspace`).
 
-### 3. Relais Skill Directory Anatomy
+| Mode | When to use |
+|---|---|
+| `cloud-only` | Text processing, external API calls, no local resources needed |
+| `local-ish` | Requires `execute_ish_command`. Always `cd $RELAIS_SESS_PATH/workspace` first. |
+| `hybrid` | Combines cloud reasoning with local execution |
 
-A standard Relais skill package follows this structure:
+### 3. Skill Directory Structure
 
 ```text
 skill-name/
-├── SKILL.md          (Required: Triggers and core workflow)
-└── resources/        (Optional: On-demand assets)
-    ├── local_bin/    - Executable Shell or Python scripts for iSH
-    ├── context/      - Long-form reference material for RAG
+├── SKILL.md          (Required: frontmatter + core workflow)
+└── resources/        (Optional: on-demand assets)
+    ├── local_bin/    - Shell/Python scripts for iSH execution
+    ├── context/      - Long-form reference material
     └── templates/    - Base templates for file generation
 ```
 
-#### SKILL.md Frontmatter
-- `name`: Unique identifier for the skill.
-- `description`: The primary triggering mechanism. The model reads this to decide if the skill is relevant to the user's request.
-- `execution_env`: Defines the skill's dependency on the local iSH engine.
+### 4. SKILL.md Frontmatter Fields
 
-#### SKILL.md Body
-Keep the body under 300 lines. Offload detailed documentation to `resources/context/` to keep the core prompt lean.
+```yaml
+---
+name: my-skill          # Required. Unique slug, used as folder name.
+version: 1.0.0          # Required. Semantic versioning.
+description: ...        # Required. Primary trigger — AI reads this to decide relevance.
+execution_env: hybrid   # Required. cloud-only | local-ish | hybrid
+---
+```
+
+Keep the body under 300 lines. Offload detailed docs to `resources/context/`.
+
+## _meta.json (Skill Index Format)
+
+When publishing a skill to a registry or sharing via URL, provide a `_meta.json` index alongside:
+
+```json
+{
+  "version": "1.0.0",
+  "updated_at": "2026-04-19",
+  "skills": [
+    {
+      "id": "my-skill",
+      "name": "My Skill",
+      "description": "One-line trigger description.",
+      "version": "1.0.0",
+      "url": "https://github.com/user/repo/blob/main/skills/my-skill/SKILL.md",
+      "category": "automation",
+      "author": "your-handle"
+    }
+  ]
+}
+```
+
+- `url` points to the GitHub blob page or raw URL of `SKILL.md`. Relais auto-converts blob URLs to raw for download.
+- `id` must match the folder name (slug).
 
 ## Loading Strategy (Progressive Disclosure)
 
-Relais utilizes a three-tier loading system to optimize performance:
-1. **Metadata Layer**: The `description` of every skill is always present in the system prompt.
-2. **Activation Layer**: When a user's intent matches, the full `SKILL.md` body is loaded into context.
-3. **Deep Dive Layer**: The model calls local tools to read files within the `resources/` directory only as needed.
+Relais uses a three-tier loading system:
+1. **Metadata Layer**: The `description` of every *enabled* skill is injected into the system prompt on every turn.
+2. **Activation Layer**: When intent matches, the full `SKILL.md` body is loaded into context.
+3. **Deep Dive Layer**: The model calls `execute_ish_command` to read files in `resources/` as needed.
 
-## Skill Creation Prohibitions
-- **No Human-Centric Files**: Do not include `README.md`, `CHANGELOG.md`, or `INSTALL.md`. Skills are strictly for AI consumption.
-- **No Absolute Paths**: Never hardcode physical paths. Always use relative paths from the sandbox root or the standardized `/var/relais` mount point.
-```
+## Prohibitions
+- **No human-centric files**: No `README.md`, `CHANGELOG.md`, or `INSTALL.md`. Skills are for AI consumption only.
+- **No absolute iOS paths**: Never reference `/private/var/...` or any physical device path.
+- **No hardcoded session hashes**: Always use `$RELAIS_SESS_PATH` or the path injected by the system prompt.
