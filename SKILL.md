@@ -1,5 +1,5 @@
 ---
-name: relais-skill-blueprint
+name: skill-creator
 version: 2.0.0
 description: Official guide for creating Relais skills. Triggered when the user needs to empower the model with specialized capabilities, particularly those involving local sandbox operations, automation scripts, or specific professional workflows.
 execution_env: hybrid
