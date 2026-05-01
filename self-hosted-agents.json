@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-01",
+  "agents": [
+    {
+      "type": "hermes",
+      "displayName": "Hermes Agent",
+      "subtitle": "自托管 AI Agent，支持记忆/技能/工具调用",
+      "icon": "server.rack",
+      "iconColor": "#2563EB",
+      "defaultPort": 8642,
+      "defaultPath": "/v1",
+      "authOptional": true,
+      "docsURL": "https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server",
+      "connectMethods": ["manual", "tailscale"],
+      "capabilities": {
+        "chat": {
+          "endpoint": "/v1/chat/completions",
+          "format": "openai_streaming"
+        },
+        "models": {
+          "endpoint": "/v1/models",
+          "format": "openai_models"
+        },
+        "skills": null,
+        "memory": null,
+        "sessions": null,
+        "cron": null
+      }
+    }
+  ]
+}
