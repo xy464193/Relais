@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "wallpapers": [
+    {
+      "id": "featured-1",
+      "title": "Featured 1",
+      "thumbnailURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/1.jpg",
+      "imageURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/1.jpg",
+      "sha256": "",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "featured-2",
+      "title": "Featured 2",
+      "thumbnailURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/2.jpg",
+      "imageURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/2.jpg",
+      "sha256": "",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "featured-3",
+      "title": "Featured 3",
+      "thumbnailURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/3.jpg",
+      "imageURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/3.jpg",
+      "sha256": "",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "featured-4",
+      "title": "Featured 4",
+      "thumbnailURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/4.jpg",
+      "imageURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/4.jpg",
+      "sha256": "",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "featured-5",
+      "title": "Featured 5",
+      "thumbnailURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/5.jpg",
+      "imageURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/5.jpg",
+      "sha256": "",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "featured-6",
+      "title": "Featured 6",
+      "thumbnailURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/6.jpg",
+      "imageURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/6.jpg",
+      "sha256": "",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "featured-7",
+      "title": "Featured 7",
+      "thumbnailURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/7.jpg",
+      "imageURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/7.jpg",
+      "sha256": "",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": "featured-8",
+      "title": "Featured 8",
+      "thumbnailURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/8.jpg",
+      "imageURL": "https://raw.githubusercontent.com/xy464193/Relais/main/RemoteAssets/wallpapers/8.jpg",
+      "sha256": "",
+      "width": null,
+      "height": null
+    }
+  ]
+}
